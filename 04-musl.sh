@@ -5,9 +5,9 @@ cd $SOURCES/musl-$MUSL_VER
 
 $MAKE distclean
 
-CFLAGS="$CFLAGS --target=$TARGET" ./configure --prefix=/usr --disable-wrapper --target=$TARGET LIBCC=$SYSROOT/usr/lib/clang/16/lib/linux/libclang_rt.builtins-$ARCH.a
+CFLAGS="$CFLAGS --target=$TARGET" ./configure --prefix=/usr --disable-wrapper --target=$TARGET LIBCC=$SYSROOT/usr/lib/clang/18/lib/linux/libclang_rt.builtins-$ARCH.a --with-malloc=rpmalloc
 
-CFLAGS="$CFLAGS --target=$TARGET" $MAKE
+CFLAGS="$CFLAGS --target=$TARGET" $MAKE -j$THREADS
 CFLAGS="$CFLAGS --target=$TARGET" DESTDIR=$SYSROOT $MAKE install
 
 mv $SYSROOT/usr/lib/libc.so $SYSROOT/lib/ld-musl-$ARCH.so.1

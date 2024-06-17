@@ -16,7 +16,7 @@ cmake -G Ninja "$SOURCES/llvm-$LLVM_VER/compiler-rt" \
 -DCOMPILER_RT_BUILD_MEMPROF=OFF \
 -DCOMPILER_RT_BUILD_ORC=OFF \
 -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
--DCOMPILER_RT_INSTALL_PATH="/usr/lib/clang/16/" \
+-DCOMPILER_RT_INSTALL_PATH="/usr/lib/clang/18/" \
 -DCMAKE_ASM_COMPILER=clang \
 -DCMAKE_C_COMPILER=clang \
 -DCMAKE_CXX_COMPILER=clang++ \
@@ -29,7 +29,7 @@ cmake -G Ninja "$SOURCES/llvm-$LLVM_VER/compiler-rt" \
 -DCMAKE_CXX_COMPILER_WORKS=1 \
 -DCMAKE_SIZEOF_VOID_P=8
 
-samu
+samu -j$THREADS
 DESTDIR=$SYSROOT samu install
 
 touch $REPO_ROOT/.compiler-rt

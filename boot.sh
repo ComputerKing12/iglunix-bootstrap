@@ -6,9 +6,9 @@ else
 	export ARCH=$1
 fi
 
-export LLVM_VER=16.0.0
+export LLVM_VER=18.1.7
 export MUSL_VER=1.2.3
-export KERN_VER=6.2.7
+export KERN_VER=6.9.5
 export MKSH_VER=R59c
 export BUSYBOX_VER=1.36.0
 export TOYBOX_VER=0.8.9
@@ -31,13 +31,15 @@ export CFLAGS="${COMMON_FLAGS}"
 export CXXFLAGS="${COMMON_FLAGS} -stdlib=libc++"
 export LDFLAGS="-fuse-ld=lld -rtlib=compiler-rt"
 
-export CC=clang
-export CXX=clang++
+export CC=clang-18
+export CXX=clang++-18
 
 export AR=llvm-ar
 export RANLIB=llvm-ranlib
 
 [ -z "$MAKE" ] && export MAKE=make
+
+export THREADS="$(($(nproc) * 3 / 4))"
 
 mkdir -p "$SOURCES"
 mkdir -p "$BUILD"
@@ -54,9 +56,11 @@ mkdir -p "$SYSROOT/lib"
 
 ./02-musl-headers.sh
 
+./02.5-ssp_nonshared.sh
+
 ./03-compiler-rt.sh
 
-sudo cp $SYSROOT/usr/lib/clang/16/lib/linux/* $(clang -print-resource-dir)/lib/linux
+sudo cp $SYSROOT/usr/lib/clang/18/lib/linux/* $(clang-18 -print-resource-dir)/lib/linux
 
 ./04-musl.sh
 
@@ -75,11 +79,11 @@ sudo cp $SYSROOT/usr/lib/clang/16/lib/linux/* $(clang -print-resource-dir)/lib/l
 export CC=$(pwd)/$ARCH-iglunix-linux-musl-cc.sh
 export CXX=$(pwd)/$ARCH-iglunix-linux-musl-c++.sh
 
-./08-mksh.sh
+# ./08-mksh.sh
 
-./09-busybox.sh
+# ./09-busybox.sh
 
-./10-toybox.sh
+# ./10-toybox.sh
 
 env -u CFLAGS -u CXXFLAGS -u LDFLAGS ./11-tblgen.sh
 
